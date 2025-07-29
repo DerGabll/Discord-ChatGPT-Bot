@@ -31,13 +31,7 @@ async def on_ready():
 @bot.command("chat")
 async def ask_openai(ctx, *, prompt: str):
     char_limit = 1700
-    response, chunks = chat(ctx, prompt, char_limit)    
-
-    for i in range(0, len(response.choices[0].message.content), char_limit):
-        chunks.append(response.choices[0].message.content[i:i + char_limit])
-
-    if len(chunks) > 1:
-        print(f"[#f2c041][b][INFO][/b] Message got split into {len(chunks)} chunks..")
+    chunks = chat(ctx, prompt, char_limit)    
 
     await ctx.send(f"""‎ \n
 ```fix

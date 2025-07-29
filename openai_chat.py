@@ -61,4 +61,4 @@ def chat(ctx, prompt, char_limit):
     if len(chunks) > 1:
         print(f"[#f2c041][b][INFO][/b] Message got split into {len(chunks)} chunks..")
 
-    return response, chunks
+    return chunks
