@@ -66,6 +66,8 @@ def roles(role: str):
                 
                 Lass uns mit deiner Schicht beim Aldi beginnen!""",
             
+            r"SAMPLE_ROLE_NAME":
+                """Sample role Text or something here i dont know """,
             }
     
     names = roles.keys()
