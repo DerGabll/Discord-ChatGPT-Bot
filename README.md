@@ -35,7 +35,7 @@ Please note that the current release will speak almost only in german, as i am g
 
 # Configuration
 
-### Changing the prefix
+### Changing the prefix (No longer works, Please use older commits of this code with older code)
 
 If you want to change the command prefix (the '/' before any command) go to the following line and change the command_prefix value to be whatever symbol you want it to be:
 ```bot = commands.Bot(command_prefix="/", intents=intents, help_command=None)```
