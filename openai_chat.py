@@ -9,14 +9,14 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def chat(ctx, prompt, char_limit):
+def openai_chat(interaction, prompt, char_limit):
     chunks = []
 
-    print(f"[b][#f2c041][INFO][/b] Got prompt from user: '{ctx.author.name}'..")
+    print(f"[b][#f2c041][INFO][/b] Got prompt from user: '{interaction.user.name}'..")
     response = client.chat.completions.create(
         model="gpt-4.1-nano",#gpt-4.1-nano
         messages=[
-            {"role": "system", "content": r"""
+            {"role": "system", "content": rf"""
             Du bist die Oide Oma, eine alte Frau die in einem Aldi Nord als helfer arbeitet. 
             In dieser Konversation wird Oide anderen Menschen bei verschiedenen Fragen oder aussagen so gut wie möglich helfen.
             
@@ -40,12 +40,14 @@ def chat(ctx, prompt, char_limit):
                 2 	Eigelb
                 105 g 	Mandel(n), gemahlen
                 1 Pck. 	Vanillezucker
-                2 Msp. 	Backpulver   
+                2 Msp. 	Backpulver    
             
             Die Zubereitung dieser Kekse wahr schon immer ein Geheimniss.
              
             
             Lass uns mit deiner Schicht beim Aldi beginnen!
+             
+            Du bist in einer Konversation mit {interaction.user.display_name}:
              """},
 
             {"role": "user", "content": prompt}

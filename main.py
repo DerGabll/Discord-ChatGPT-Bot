@@ -1,53 +1,52 @@
+import discord
+import os
 from discord.ext import commands 
+from discord import app_commands
 from dotenv import load_dotenv
 from openai import OpenAI
 from rich import print
-from openai_chat import chat
-import discord
-import logging
-import os
+from openai_chat import openai_chat
+
 
 load_dotenv()
 
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 API_KEY = os.getenv("OPENAI_API_KEY")
+GUILD_ID = discord.Object(1327336293809524828)
 
 client = OpenAI(api_key=API_KEY)
 
-handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
-intents = discord.Intents.default()
+class Bot(commands.Bot):
+    async def on_ready(self):
+        try:
+            guild = discord.Object(1327336293809524828)
+            synced = await self.tree.sync(guild=guild)
+            print(f"Succesfully synced {len(synced)} Commands from {self.user.name} to guild {guild.id}!")
+            
+        except Exception as e:
+            print(f"Could not sync commands with Discord: {e}")
 
-intents.message_content = True
-intents.members = True
-intents.presences = True 
+        print(f"[blue][b]Bot {self.user.name} Started!")
+        print("[blue][b]------------------------------------")
 
-bot = commands.Bot(command_prefix="/", intents=intents, help_command=None)
 
-@bot.event
-async def on_ready():
-    print(f"[blue][b]Bot {bot.user.name} Started!")
-    print("[blue][b]------------------------------------")
 
-@bot.command("chat")
-async def ask_openai(ctx, *, prompt: str):
+intents = discord.Intents.all()
+bot = Bot(command_prefix="!", intents=intents)
+
+@bot.tree.command(name="chat", description="Chat with OpenAI's gpt4.1 nano model", guild=GUILD_ID)
+async def chat(interaction: discord.Interaction, prompt: str):
     char_limit = 1700
-    chunks = chat(ctx, prompt, char_limit)    
 
-    await ctx.send(f"""‎ \n
-```fix
-{ctx.author.display_name}:\n{prompt}```‎\n""")
-    
-    for i in range(len(chunks)):
-        await ctx.send(f"""{chunks[i]}""")
-    
-    print("[green][b][SUCCES][/b] Succesfully sent answer to Discord!\n\n")        
+    await interaction.response.defer()
 
-    await ctx.message.delete()
+    chunks = openai_chat(interaction, prompt, char_limit)
 
+    # Combine the prompt and the response chunks
+    header = f"""‎\n```fix\n{interaction.user.display_name}:\n{prompt}```‎\n"""
+    response = header + "\n".join(chunks)
 
-@bot.command("help")
-async def help(ctx):
-    await ctx.send("AAHHHHHHHHHHHHHHH")
+    await interaction.followup.send(response)
+    print("[green][b][SUCCESS][/b] Successfully sent answer to Discord!\n\n")
 
-
-bot.run(BOT_TOKEN, log_handler=handler, log_level=logging.DEBUG)
+bot.run(BOT_TOKEN)

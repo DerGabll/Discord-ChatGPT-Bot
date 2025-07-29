@@ -16,8 +16,7 @@ Otherwise, you have two choices when setting up your API Keys
 
 ### API Keys using System environment variables
 
-If you want to use System environment variables, you can delete line 9,  11 and 12 in main.py and change the line with the client variable to not have any api key in the OpenAI class.
-Then, you will have to setup two system environment variables: DISCORD_TOKEN and OPENAI_API_KEY. If you don't know how to set up environment variables, you can see a tutorial [here](https://pureinfotech.com/create-custom-environment-variables-windows-10/). The values of the Token and Key should each be the token and the key that you got from discord and openai.
+You will have to setup two system environment variables: DISCORD_TOKEN and OPENAI_API_KEY. If you don't know how to set up environment variables, you can see a tutorial [here](https://pureinfotech.com/create-custom-environment-variables-windows-10/). The values of the Token and Key should each be the token and the key that you got from discord and openai.
 
 ### API Keys using .env files
 
@@ -40,14 +39,16 @@ Please note that the current release will speak almost only in german, as i am g
 
 If you want to change the command prefix (the '/' before any command) go to the following line and change the command_prefix value to be whatever symbol you want it to be:
 ```bot = commands.Bot(command_prefix="/", intents=intents, help_command=None)```
+in main.py
 
 ### Changing the chatgpt model
 
 If you want to change the chatgpt model, you can change the following line to be one of the other models listed [here](https://platform.openai.com/docs/models):
 ```model="model_name", #gpt-4.1-nano```
+in openai_chat.py
 
 ### Changing how chatgpt acts
 
 If you want to change the 'personality' of chatgpt, you can edit the following lines with whatever you want chatgpt to be or do:
 ```{"role": "system", "content": r"""You are a horse :D"""```
-
+in openai_chat.py
