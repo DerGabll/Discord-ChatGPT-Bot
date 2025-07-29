@@ -60,7 +60,7 @@ async def ask_openai(ctx, *, prompt: str):
                 2 	Eigelb
                 105 g 	Mandel(n), gemahlen
                 1 Pck. 	Vanillezucker
-                2 Msp. 	Backpulver 
+                2 Msp. 	Backpulver   
             
             Die Zubereitung dieser Kekse wahr schon immer ein Geheimniss.
              
