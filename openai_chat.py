@@ -8,9 +8,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def chat(ctx, prompt):
+def chat(ctx, prompt, char_limit):
     chunks = []
-    char_limit = 1700
 
     print(f"[b][#f2c041][INFO][/b] Got prompt from user: '{ctx.author.name}'..")
     response = client.chat.completions.create(
@@ -61,4 +60,4 @@ def chat(ctx, prompt):
     if len(chunks) > 1:
         print(f"[#f2c041][b][INFO][/b] Message got split into {len(chunks)} chunks..")
 
-    return chunks
+    return response, chunks
