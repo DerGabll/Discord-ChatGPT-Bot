@@ -8,3 +8,5 @@ ENV/
 
 # Discord Log
 discord.log
+
+__pycache__/
