@@ -49,6 +49,4 @@ in openai_chat.py
 
 ### Changing how chatgpt acts
 
-If you want to change the 'personality' of chatgpt, you can edit the following lines with whatever you want chatgpt to be or do:
-```{"role": "system", "content": r"""You are a horse :D"""```
-in openai_chat.py
+If you want to change the 'personality' of chatgpt, you can make or delete new roles in the roles.py file. Just make it the same layout as the sample roles and you'll be fine.
