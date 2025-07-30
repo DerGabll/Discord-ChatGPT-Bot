@@ -10,16 +10,15 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-
-def openai_chat(interaction, prompt, char_limit):
+def openai_chat(prompt, char_limit):
     chunks = []
-    role = roles("NICE_GRANDMA")
+    role = roles("GANGSTER_GRANDMA")
 
-    print(f"[b][#f2c041][INFO][/b] Got prompt from user: '{interaction.user.name}'..")
+    print(f"[b][#f2c041][INFO][/b] Got prompt")
     response = client.chat.completions.create(
         model="gpt-4.1-nano",#gpt-4.1-nano
         messages=[
-            {"role": "system", "content": role + f"\nDu bist in einer Konversation mit {interaction.user.display_name}:"},
+            {"role": "system", "content": role},
             {"role": "user", "content": prompt}
         ]
     )
