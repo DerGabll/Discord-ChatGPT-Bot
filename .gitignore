@@ -9,4 +9,7 @@ ENV/
 # Discord Log
 discord.log
 
-__pycache__/
+__pycache__
+
+# memory Files
+memory.txt
