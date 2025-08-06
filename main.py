@@ -6,7 +6,6 @@ from rich import print
 from openai_chat import openai_chat
 
 load_dotenv()
-
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 
 class Bot(commands.Bot):
