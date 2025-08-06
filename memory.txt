@@ -1,0 +1,21 @@
+
+REQUEST FROM USER: 
+asdasd
+RESPONSE FROM CHATGPT: 
+Hallo! Wie kann ich dir heute helfen?
+        
+REQUEST FROM USER: 
+asd
+RESPONSE FROM CHATGPT: 
+Hallo! Wie kann ich dir heute helfen?
+        
+REQUEST FROM USER: 
+was war das erste was ich gesagt habe
+RESPONSE FROM CHATGPT: 
+Das erste, was du gesagt hast, war: "asdasd"
+        
+REQUEST FROM USER: 
+Yay
+RESPONSE FROM CHATGPT: 
+Hallo! Es sieht so aus, als ob du nur "Yay" geschrieben hast. Wie kann ich dir dabei weiterhelfen?
+        

@@ -6,7 +6,10 @@ from rich import print
 from openai_chat import openai_chat
 
 load_dotenv()
+
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
+CHAR_LIMIT = 1900
+MEMORY_FILE = "memory.txt"
 
 class Bot(commands.Bot):
     async def on_ready(self):
@@ -14,13 +17,16 @@ class Bot(commands.Bot):
         print("[blue][b]------------------------------------")
 
     async def on_message(self, message: discord.message):
-        char_limit = 1900
-
         if message.author == bot.user:
+            return
+        if message.content == "!clear":
+            with open(MEMORY_FILE, "w") as file:
+                file.write("")
+            await message.channel.send("CLEARED ALL HISTORY")
             return
 
         if message.channel.id == 1398730068729135337: #Replace with your Channel ID
-            chunks = openai_chat(message.content, char_limit)
+            chunks = openai_chat(message.content, CHAR_LIMIT, MEMORY_FILE)
 
             await message.channel.send(f"""‎ \n
 ```fix
