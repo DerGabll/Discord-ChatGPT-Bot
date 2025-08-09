@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from rich import print
 from roles import roles
+from datetime import datetime
 import os
 
 load_dotenv()
@@ -11,11 +12,13 @@ MAX_HISTORIES = 5
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def openai_chat(prompt, char_limit, memory_file):
+def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, time: datetime.now()):
     chunks = []
-    role = roles("ASSISTANT")
 
-    print(f"[b][#f2c041][INFO][/b] Got prompt")
+    print(f'{time} [b][#f2c041][INFO][/b] Got prompt: "{prompt}" from user: "{username}"')
+
+    role_name = "NICE_GRANDMA"
+    role = roles(role_name, time) or ""
 
     if not os.path.exists(memory_file):
         with open(memory_file, "x"):
@@ -25,10 +28,10 @@ def openai_chat(prompt, char_limit, memory_file):
         memory = file.readlines()
 
     response = client.chat.completions.create(
-        model="gpt-4.1-nano",#gpt-4.1-nano
+        model="gpt-5-mini",#gpt-4.1-nano
         messages=[
             {"role": "system", "content": role},
-            {"role": "user", "content": f"""{prompt}\n\nHier ist dein Chatverlauf zwischen dem User und dir. Jede Frage ist so Aufgebaut: 
+            {"role": "user", "content": f"""Hier ist dein Chatverlauf zwischen dem User und dir. Jede Frage ist so Aufgebaut: 
     REQUEST FROM USER: 
     <request>
     RESPONSE FROM CHATGPT: 
@@ -37,7 +40,10 @@ def openai_chat(prompt, char_limit, memory_file):
 Hier ist der Chatverlauf: 
     {memory}
 
-Schaue dir den Verlauf gut an und antworte immer mit einbeziehung des Chatverlaufs
+Schaue dir den Verlauf gut an. Erwähne nicht Eigenschaften deiner Rolle wie name, alter... wenn du nicht danach gefragt wurdest oder erwähnen willst
+
+Hier kommen deine Anweisungen. Befolge alle Anweisung:
+{prompt}
             """}
         ]
     )
@@ -61,7 +67,7 @@ RESPONSE FROM CHATGPT:
         for line in lines:
             if line.startswith(user_request):
                 history_count += 1
-        print(f"[#f2c041][b][INFO][/b] There are currently {history_count} conversations in memory")
+        print(f"{time} [#f2c041][b][INFO][/b] There are currently {history_count} conversations in memory")
 
         while history_count >= MAX_HISTORIES:
             with open(memory_file, "r") as file:
@@ -81,13 +87,13 @@ RESPONSE FROM CHATGPT:
         
 
     
-    print("[#f2c041][b][INFO][/b] Got ChatGPT's answer..")
-    print("[#f2c041][b][INFO][/b] Sending answer to Discord..")
+    print(f"{time} [#f2c041][b][INFO][/b] Got ChatGPT's answer")
+    print(f"{time} [#f2c041][b][INFO][/b] Sending answer to Discord")
 
     for i in range(0, len(openai_response), char_limit):
         chunks.append(openai_response[i:i + char_limit])
 
     if len(chunks) > 1:
-        print(f"[#f2c041][b][INFO][/b] Message got split into {len(chunks)} chunks..")
+        print(f"{time} [#f2c041][b][INFO][/b] Message got split into {len(chunks)} chunks")
 
     return chunks
