@@ -12,7 +12,7 @@ MAX_HISTORIES = 5
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, time: datetime.now()):
+def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, time: datetime.now(), dementia: bool):
     chunks = []
 
     print(f'{time} [b][#f2c041][INFO][/b] Got prompt: "{prompt}" from user: "{username}"')
@@ -67,22 +67,25 @@ RESPONSE FROM CHATGPT:
         for line in lines:
             if line.startswith(user_request):
                 history_count += 1
-        print(f"{time} [#f2c041][b][INFO][/b] There are currently {history_count} conversations in memory")
 
-        while history_count >= MAX_HISTORIES:
-            with open(memory_file, "r") as file:
-                lines = file.readlines()
-            
-            with open(memory_file, "w") as file:
-                count = 0
+        if dementia:
+            while history_count >= MAX_HISTORIES:
+                with open(memory_file, "r") as file:
+                    lines = file.readlines()
+                
+                with open(memory_file, "w") as file:
+                    count = 0
 
-                for line in lines:
-                    if line.startswith(user_request):
-                        count += 1
-                    
-                    if count >= 2:
-                        file.write(line)
-            history_count -= 1
+                    for line in lines:
+                        if line.startswith(user_request):
+                            count += 1
+                        
+                        if count >= 2:
+                            file.write(line)
+                history_count -= 1
+
+        print(f"{time} [#f2c041][b][INFO][/b] There are currently {history_count + 1} conversations in memory")
+
 
         
 

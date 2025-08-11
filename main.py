@@ -32,29 +32,35 @@ class Bot(commands.Bot):
             return message.author.guild_permissions.administrator
 
     async def on_ready(self):
-        self.time = f"[white]{datetime.now().strftime('%H:%M')}[white]"
+        self.dementia = True
+
         print(f"[blue][b]Bot {self.user.name} Started!")
         print("[blue][b]------------------------------------\n")
 
     async def on_message(self, message: discord.message):
+        self.time = f"[white]{datetime.now().strftime('%H:%M')}[white]"
+
         if message.author == bot.user:
             return
-        if message.content == "!clear" and self.is_owner(message):
-            await self.delete_messages(message)
-            return 
-        elif message.content == "!memory" and self.is_owner(message):
-            await self.clear_memory(message)
-            return 
-        elif message.content == "!purgeAll" and self.is_owner(message):
-            await self.clear_memory(message)
-            await self.delete_messages(message)
-            return 
 
-        if message.content.startswith(".ignore"):
+        if self.is_owner(message):
+            match message.content:
+                case "!clearChat":
+                    await self.delete_messages(message)
+                case "!clearMemory":
+                    await self.clear_memory(message)                    
+                case "!clearAll":
+                    await self.clear_memory(message)
+                    await self.delete_messages(message)
+                case "!dementia":
+                    self.dementia = not self.dementia
+                    await message.channel.send(f"Dementia now set to: {self.dementia}")
+
+        if message.content.startswith(".ignore") or message.content.startswith("!"):
             return
             
         if message.channel.id == 1398730068729135337: #Replace with your Channel ID
-            chunks = openai_chat(message.content, message.author.display_name, CHAR_LIMIT, MEMORY_FILE, self.time)
+            chunks = openai_chat(message.content, message.author.display_name, CHAR_LIMIT, MEMORY_FILE, self.time, self.dementia)
 
             await message.channel.send(f"""‎ \n
 ```fix
