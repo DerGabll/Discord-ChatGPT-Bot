@@ -17,7 +17,7 @@ def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, t
 
     print(f'{time} [b][#f2c041][INFO][/b] Got prompt: "{prompt}" from user: "{username}"')
 
-    role_name = "NICE_GRANDMA"
+    role_name = "GANGSTER_GRANDMA"
     role = roles(role_name, time) or ""
 
     if not os.path.exists(memory_file):
@@ -28,7 +28,7 @@ def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, t
         memory = file.readlines()
 
     response = client.chat.completions.create(
-        model="gpt-5-mini",#gpt-4.1-nano
+        model="gpt-4.1-nano",#gpt-4.1-nano
         messages=[
             {"role": "system", "content": role},
             {"role": "user", "content": f"""Hier ist dein Chatverlauf zwischen dem User und dir. Jede Frage ist so Aufgebaut: 
