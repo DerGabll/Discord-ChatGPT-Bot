@@ -9,16 +9,16 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MAX_HISTORIES = 5
+ROLE_NAME = "NICE_GRANDMA" # Look at roles.py for roles to choose or add
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, time: datetime.now(), dementia: bool):
+def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, time, dementia: bool):
     chunks = []
 
     print(f'{time} [b][#f2c041][INFO][/b] Got prompt: "{prompt}" from user: "{username}"')
 
-    role_name = "GANGSTER_GRANDMA"
-    role = roles(role_name, time) or ""
+    role = roles(ROLE_NAME, time, prompt, memory_file) or "" # Checks if role exists else makes it have no prompt
 
     if not os.path.exists(memory_file):
         with open(memory_file, "x"):
@@ -28,23 +28,10 @@ def openai_chat(prompt: str, username: str, char_limit: int, memory_file: str, t
         memory = file.readlines()
 
     response = client.chat.completions.create(
-        model="gpt-4.1-nano",#gpt-4.1-nano
+        model="gpt-4.1-nano",
         messages=[
             {"role": "system", "content": role},
-            {"role": "user", "content": f"""Hier ist dein Chatverlauf zwischen dem User und dir. Jede Frage ist so Aufgebaut: 
-    REQUEST FROM USER: 
-    <request>
-    RESPONSE FROM CHATGPT: 
-    <response>
-
-Hier ist der Chatverlauf: 
-    {memory}
-
-Schaue dir den Verlauf gut an. Erwähne nicht Eigenschaften deiner Rolle wie name, alter... wenn du nicht danach gefragt wurdest oder erwähnen willst
-
-Hier kommen deine Anweisungen. Befolge alle Anweisung:
-{prompt}
-            """}
+            {"role": "user", "content": prompt}
         ]
     )
 
@@ -86,10 +73,6 @@ RESPONSE FROM CHATGPT:
 
         print(f"{time} [#f2c041][b][INFO][/b] There are currently {history_count + 1} conversations in memory")
 
-
-        
-
-    
     print(f"{time} [#f2c041][b][INFO][/b] Got ChatGPT's answer")
     print(f"{time} [#f2c041][b][INFO][/b] Sending answer to Discord")
 
