@@ -36,7 +36,7 @@ Run the main.py file. Then, all you have to do is write a message into the chann
 
 ### Setting Owner and Server ID
 
-To do this, you'll first want to enable the [discord developer settings](https://www.howtogeek.com/714348/how-to-enable-or-disable-developer-mode-on-discord/). Then, right-click on the channel you want your bot to check for messages on and click on "Copy channel ID". After that, replace the CHANNEL_ID value with the copied ID. Do this for the OWNER_ID variable as well but instead of copying the id of the channel, right-click on the owners profile and click on "Copy User ID".
+Check the link for more help [here](https://www.howtogeek.com/714348/how-to-enable-or-disable-developer-mode-on-discord/)
 
 ### Changing the chatgpt model
 
@@ -47,4 +47,5 @@ in openai_chat.py
 ### Changing how chatgpt acts
 
 If you want to change the 'personality' of chatgpt, you can make or delete new roles in the roles.py file. Just make it the same layout as the sample roles.
+
 
