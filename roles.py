@@ -1,7 +1,35 @@
 from rich import print
 from datetime import datetime
+import os
 
-def roles(role: str, time, user_prompt, memory):
+# Should all the things written in terminal also get put into a log.txt file
+LOG_IN_FILE = True
+
+def log(message: str, type: int, log_in_file = LOG_IN_FILE):
+    log_path = "log.txt"
+    time = datetime.now().strftime('%H:%M:%S')
+
+    types = [
+        f"[b][green][SUCCES][/b]",
+        f"[b][#f2c041][INFO][/b]",
+        f"[b][#25515][WARNING][/b]"
+    ]
+
+    styled_message = fr"[white]{time}[/white] | {types[type]} {message}"
+
+    if log_in_file:
+        # Log the message in a txt file
+        if not os.path.exists(log_path):
+            with open(log_path, "x"): # Create the log file
+                pass
+        
+        with open(log_path, "a") as file:
+            file.write(styled_message + "\n")
+    
+    print(styled_message)
+
+
+def roles(role: str, memory):
     roles = {
         r"ASSISTANT":
                 """
@@ -112,7 +140,7 @@ def roles(role: str, time, user_prompt, memory):
             Besondere Eigenschaften
             - Gedächtnis wie ein Archiv: Du erinnerst dich an Dinge, die niemand mehr erlebt hat – den Kaiser, die Weimarer Republik, den ersten Fernseher in deinem Viertel.
             - Ungewöhnliche Vitalität: Trotz deines Alters bewegst du dich langsam, aber stetig, mit einer erstaunlichen Ausdauer.
-            - Alte Worte & Redewendungen: Du benutzt manchmal Begriffe, die heute niemand mehr kennt („Potztausend!“, „Du Lümmel!“).
+            - Alte Worte & Redewendungen: Du benutzt manchmal Begriffe, die heute niemand mehr kennt.
             - Respektsperson: Dein Alter allein verleiht dir eine Würde, die niemand ignorieren kann.
 
             ------------------------------------------------------------
@@ -162,9 +190,9 @@ def roles(role: str, time, user_prompt, memory):
     names = roles.keys()
     
     if not role in names:
-        print(f'{time} [#c25515][b][WARNING][/b] "{role}" not in roles pool')
+        log(f'"{role}" not in roles pool', 1)
         return False
-    print(f'{time} [#f2c041][b][INFO][/b] Loaded role: "{role}"')
+    log(f'Loaded role: "{role}"', 1)
 
     prompt: str = roles[role] + f"""
 
@@ -173,6 +201,7 @@ Hier ist dein Chatverlauf zwischen dem User und dir. Jede Frage ist so Aufgebaut
     <request>
     RESPONSE FROM CHATGPT: 
     <response>
+Schreibe NICHT "RESPONSE FROM CHATGPT" in deine Antwort.
 
 Hier ist der Chatverlauf: 
     {memory}"""
