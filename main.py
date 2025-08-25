@@ -1,21 +1,31 @@
 import discord
 import os
 from datetime import datetime
-from discord.ext import commands 
 from dotenv import load_dotenv
 from rich import print
 from openai_chat import openai_chat
+from roles import log
 import sys
 
 load_dotenv()
 
+# Your Discord Bot token
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
-CHAR_LIMIT = 1900
-MEMORY_FILE = "memory.txt"
-OWNER_ID = 1289363432864354365
-CHANNEL_ID = 1398730068729135337 #Replace with your Channel ID
 
-class Bot(commands.Bot):
+# At which point openai's answer will get split into another message (keep under ~2000 because you can't send a message over that length)
+CHAR_LIMIT = 1900
+
+# Where openai's conversations are saved
+MEMORY_FILE = "memory.txt"
+
+# The ID's of the server owner and the channel that you want the bot to look for messages to answer
+OWNER_ID = 1289363432864354365
+CHANNEL_ID = 1398730068729135337 # Replace with your Channel ID
+
+def get_time():
+    return int(datetime.now().strftime('%S'))
+
+class Bot(discord.Client):
     async def delete_messages(self, message: discord.message):
         await message.channel.send("Deleting all Messages..")
         await message.channel.purge(limit=None)
@@ -37,14 +47,12 @@ class Bot(commands.Bot):
         self.dementia = True
 
         channel = self.get_channel(CHANNEL_ID)
-        await channel.send(f"Bot {self.user.name} Started!")
+        await channel.send(f"Bot {self.user.name} Started!", delete_after=2)
 
         print(f"[blue][b]Bot {self.user.name} Started!")
         print("[blue][b]------------------------------------\n")
 
     async def on_message(self, message: discord.message):
-        self.time = f"[white]{datetime.now().strftime('%H:%M')}[white]"
-
         # Return if message send by self or if message starts with .ignore
         if message.author == bot.user or message.content.startswith(".ignore"):
             return
@@ -75,8 +83,13 @@ class Bot(commands.Bot):
                 await message.channel.send("Bot has been stopped")
                 quit()
         
+        if message.content.startswith("!"):
+            return
+        
+        start_time = get_time()
+        log(f'Got prompt: "{message.content}" from user: "{message.author.display_name}"', 1)
         # Main message processing (Sending message to OpenAI - OpenAI processing / sending message - user receiving feedback from OpenAI)
-        chunks = openai_chat(message.content, message.author.display_name, CHAR_LIMIT, MEMORY_FILE, self.time, self.dementia)
+        chunks = openai_chat(message.content, CHAR_LIMIT, MEMORY_FILE, self.dementia)
 
         await message.channel.send(f"""‎ \n
 ```fix
@@ -84,13 +97,14 @@ class Bot(commands.Bot):
 {message.author.display_name}:\n{message.content}```‎\n""")
 
         for chunk in chunks:
-            await message.channel.send(f"""{chunk}""")
+            await message.channel.send(chunk)
 
-        print(f"{self.time} [green][b][SUCCES][/b] Succesfully sent answer to Discord!\n\n")        
+        end_time = get_time()
+        log(f"Succesfully sent answer to Discord! (took {end_time - start_time} seconds)\n", 0)    
 
         await message.delete()       
 
 intents = discord.Intents.all()
-bot = Bot(command_prefix="!", intents=intents)
+bot = Bot(intents=intents)
 
 bot.run(BOT_TOKEN)
