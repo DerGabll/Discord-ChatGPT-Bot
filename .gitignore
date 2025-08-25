@@ -11,5 +11,7 @@ discord.log
 
 __pycache__
 
-# memory Files
+# memory File
 memory.txt
+
+log.txt
