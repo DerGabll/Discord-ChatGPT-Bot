@@ -7,10 +7,14 @@ from openai_chat import openai_chat
 from roles import log
 import sys
 
-load_dotenv()
-
+load_dotenv(override=True) # override to make sure it doesnt take you 2 hours to find out why it doesnt work
 # Your Discord Bot token
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
+
+# Check if BOT_TOKEN loading has an error
+if not BOT_TOKEN:
+    log("BOT_TOKEN is empty", 3) # Send an error message
+    quit()
 
 # At which point openai's answer will get split into another message (keep under ~2000 because you can't send a message over that length)
 CHAR_LIMIT = 1900

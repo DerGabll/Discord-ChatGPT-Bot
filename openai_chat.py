@@ -1,19 +1,23 @@
 from dotenv import load_dotenv
 from openai import OpenAI
 from roles import roles, log
-from datetime import datetime
 import os
 
-load_dotenv()
-
+load_dotenv(override=True)# override to make sure it doesnt take you 2 hours to find out why it doesnt work
 # Your OpenAI API key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Check if OPENAI_API_KEY loading has an error
+if not OPENAI_API_KEY:
+    log("OPENAI_API_KEY is empty", 3)
+    quit()
+
 
 # How many conversations should be kept in the memory file while dementia is enabled
 MAX_CONVERSATIONS = 5
 
 # The personality of the Bot
-ROLE_NAME = "NICE_GRANDMA" # Look at roles.py for roles to choose or add
+ROLE_NAME = "AUSTRIAN_GRANDMA" # Look at roles.py for roles to choose or add
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -28,7 +32,7 @@ def openai_chat(prompt: str, char_limit: int, memory_file: str, dementia: bool):
             pass
     
     response = client.chat.completions.create(
-        model="gpt-4.1-nano", # Best model because of speed and roleplay. gpt-5 isn't very good at acting
+        model="gpt-4.1-nano", # Best model because of speed and roleplay. gpt-5 isn't very good at acting 
         messages=[
             {"role": "system", "content": role},
             {"role": "user", "content": prompt}
