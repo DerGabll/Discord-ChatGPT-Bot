@@ -39,7 +39,7 @@ class Bot(discord.Client):
         with open(MEMORY_FILE, "w") as file:
             file.write("")
         await message.channel.send("Cleared all Memory", delete_after=2)
-        return 
+        return
 
     def is_owner(self, message: discord.message, include_admin: bool=True):
         if not include_admin:
@@ -65,7 +65,7 @@ class Bot(discord.Client):
             return
         # Return if sending message that starts with "!" but user is not owner or admin
         elif not self.is_owner(message) and message.content.startswith("!"):
-            await message.channel.send("Du Lümmel kansch it commands senden leider")
+            await message.channel.send("Du Lümmel darfsch it commands senden")
             return
 
         # Commands
@@ -73,7 +73,7 @@ class Bot(discord.Client):
             case "!clear_chat":
                 await self.delete_messages(message)
             case "!clear_memory":
-                await self.clear_memory(message)                    
+                await self.clear_memory(message)
             case "!clear_all":
                 await self.clear_memory(message)
                 await self.delete_messages(message)
@@ -86,10 +86,10 @@ class Bot(discord.Client):
             case "!stop":
                 await message.channel.send("Bot has been stopped")
                 quit()
-        
+
         if message.content.startswith("!"):
             return
-        
+
         start_time = get_time()
         log(f'Got prompt: "{message.content}" from user: "{message.author.display_name}"', 1)
         # Main message processing (Sending message to OpenAI - OpenAI processing / sending message - user receiving feedback from OpenAI)
@@ -104,9 +104,9 @@ class Bot(discord.Client):
             await message.channel.send(chunk)
 
         end_time = get_time()
-        log(f"Succesfully sent answer to Discord! (took {end_time - start_time} seconds)\n", 0)    
+        log(f"Succesfully sent answer to Discord! (took {end_time - start_time} seconds)\n", 0)
 
-        await message.delete()       
+        await message.delete()
 
 intents = discord.Intents.all()
 bot = Bot(intents=intents)
