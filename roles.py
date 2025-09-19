@@ -6,6 +6,17 @@ import os
 LOG_IN_FILE = True
 
 def log(message: str, type: int, log_in_file = LOG_IN_FILE):
+    """
+    Logs a message in the console using rich to make the messsage types clearer.
+
+    ### Types:
+        0 SUCCES
+        1 INFO
+        2 WARNING
+        3 ERROR
+    ### Returns:
+        None
+    """
     log_path = "log.txt"
     time = datetime.now().strftime('%H:%M:%S')
 
@@ -31,6 +42,23 @@ def log(message: str, type: int, log_in_file = LOG_IN_FILE):
 
 
 def roles(role: str, memory_file: str):
+    """
+    Choose a number of roles that the Chatbot should act as.
+
+    ## Roles:
+        ### NICE_GRANDMA: 
+        An old grandma that works at an Aldi
+        ### GANGSTER_GRANDMA: 
+        An old grandma that is friendly at first but if you insult her she will get angry
+        ### AUSTRIAN_GRANDMA: 
+        An austrian grandma
+        ### NICE_GRANDMA_OLD: 
+        An old script from grandma that is less refined
+        ### ASSISTANT: 
+        A Basic Assistant
+        ### SAMPLE_ROLE_NAME: 
+        A Template which you can use to make your own role
+    """
     roles = {
         r"ASSISTANT":
                 """
@@ -253,7 +281,7 @@ def roles(role: str, memory_file: str):
             }
     
     names = roles.keys()
-    
+
     if not role in names:
         log(f'"{role}" not in roles pool', 1)
         return False
@@ -279,8 +307,5 @@ Jede Konversation zwischen dir und dem user ist in deiner 'memory' so enthalten 
 !Ende des Chatverlaufs!
 Lies dir immer die vorherigen User Requests und die Response durch. Zwei mal. Dann entscheide ob du im vorherigen verlauf eine nachricht oder etwas anderes mit schreiben musst
 """
-    print(prompt)
 
     return prompt
-
-
