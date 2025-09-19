@@ -267,12 +267,11 @@ def roles(role: str, memory_file: str):
         memory += line
     prompt: str = roles[role] + f"""
 
-Hier ist dein Chatverlauf zwischen dem User und dir. Jede Frage ist so Aufgebaut: 
+Jede Konversation zwischen dir und dem user ist in deiner 'memory' so enthalten (auch Chatverlauf):
     REQUEST FROM USER: 
     <request>
     RESPONSE FROM CHATGPT: 
     <response>
-Schreibe NICHT "RESPONSE FROM CHATGPT" in deine Antwort. 
 
 !Hier ist der Chatverlauf: !
     {memory}
