@@ -80,7 +80,6 @@ class Bot(discord.Client):
         
         # Return if sent message was from a user of which the message should get ignored
         if message.author.get_role(IGNORED_ROLE):
-            await message.channel.send("NANANAn")
             return
 
         # Commands
