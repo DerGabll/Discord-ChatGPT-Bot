@@ -129,7 +129,7 @@ class Bot(discord.Client):
                 chunks = await asyncio.to_thread(openai_chat, message.content, self.dementia)
             except Exception as e:
                 helpers.log(f"openai_chat failed: {e}", 3)
-                await message.channel.send("OpenAI processing failed for your message.")
+                await message.channel.send("Die Oma isch momentan nicht erreichbar")
                 self.message_queue.task_done()
                 continue
 
@@ -162,6 +162,6 @@ class Bot(discord.Client):
                 pass
 
             end_time = helpers.stopwatch()
-            helpers.log(f"Successfully processed message (took {end_time - start_time:.2f} seconds)", 0)
+            helpers.log(f"Successfully processed message (took {end_time - start_time:.2f} seconds)\n", 0)
 
             self.message_queue.task_done()           
