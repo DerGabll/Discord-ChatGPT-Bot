@@ -21,7 +21,7 @@ MEMORY_FILE = "memory.txt"
 
 # Everything about the role file
 ROLE_FILE = "roles.yaml"
-ROLE_NAME = "NICE_GRANDMA"
+ROLE_NAME = "ASSISTANT"
 
 # How many conversations should be kept in the memory file while dementia is enabled
 MAX_CONVERSATIONS = 5
@@ -42,6 +42,7 @@ def openai_chat(prompt: str, dementia: bool):
         role = roles[ROLE_NAME]
 
     response = client.chat.completions.create(
+        temperature=0.1,
         model="gpt-4.1-nano", # Best model because of speed and roleplay. gpt-5 isn't very good at acting 
         messages=[
             {"role": "system", "content": role},
@@ -53,11 +54,11 @@ def openai_chat(prompt: str, dementia: bool):
 
     with open(MEMORY_FILE, "a") as file:
         user_request = "REQUEST FROM USER:"
-        file.write(f"""
-        {user_request} 
-            {prompt}
-            RESPONSE FROM CHATGPT: 
-            {openai_response}\n\n""".strip()
+
+        file.write(f"""{user_request} 
+        {prompt}
+RESPONSE FROM CHATGPT: 
+        {openai_response}\n\n"""
         )
 
     with open(MEMORY_FILE, "r") as file:

@@ -1,0 +1,33 @@
+User Prompt
+│
+▼
+Planner (small model)
+│
+▼
+Generator (strong model)
+│
+▼
+
+Loop until done
+
+Write Files to Workspace
+│
+▼
+Static Validation
+│
+▼
+Install Dependencies
+│
+▼
+Run Tests
+│
+▼
+Critic (small model)
+│
+▼
+Repair Model (small model)
+│
+▼
+Patch Files
+│
+└── repeat until tests pass or maximum attempts reached

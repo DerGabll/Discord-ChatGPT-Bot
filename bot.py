@@ -11,7 +11,7 @@ from rich import print
 load_dotenv(override=True)
 
 # Gets the discord bot token from an env file
-BOT_TOKEN = os.getenv("DISCORD_TOKEN")
+BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
 # The ID of the Role which should be ignored if a person has that role (Usefull if a bot answers when you type something but you dont want the bots message to be processed aswell)
 IGNORED_ROLE = int(os.getenv("IGNORED_ROLE_ID"))
@@ -67,8 +67,8 @@ class Bot(discord.Client):
         print("[blue][b]------------------------------------\n")
 
     async def on_message(self, message: discord.Message):
-        # Return if message send by self or if message starts with .ignore
-        if message.author == self.user or message.content.startswith(".ignore"):
+        # Return if message send by self or if message starts with .
+        if message.author == self.user or message.content.startswith("."):
             return
         # Return if not right channel (Make sure to change the CHANNEL_ID variable)
         elif not message.channel.id == CHANNEL_ID:
@@ -94,10 +94,10 @@ class Bot(discord.Client):
             case "!dementia":
                 self.dementia = not self.dementia
                 await message.channel.send(f"Dementia now set to: {self.dementia}")
-            case "!restart":
+            case "!restart" | "!r":
                 await message.channel.send("Restarting Bot...")
                 os.execv(sys.executable, ['python'] + sys.argv)
-            case "!stop":
+            case "!stop" | "!s":
                 await message.channel.send("Bot has been stopped")
                 quit()
 
@@ -129,16 +129,16 @@ class Bot(discord.Client):
                 chunks = await asyncio.to_thread(openai_chat, message.content, self.dementia)
             except Exception as e:
                 helpers.log(f"openai_chat failed: {e}", 3)
-                await message.channel.send("Die Oma isch momentan nicht erreichbar")
+                await message.reply("Die Oma isch momentan nicht erreichbar")
                 self.message_queue.task_done()
                 continue
 
             # send the original prompt for context
             try:
                 await message.channel.send(f"""‎ \n
-    ```fix
+    ```ansi
 
-    {message.author.display_name}:\n{message.content}```‎\n""")
+\x1b[34;1m{message.author.display_name}:\x1b[0m\n    \x1b[36;1m{message.content}\x1b[0m```‎\n\n""")
             except Exception:
                 helpers.log("Failed to send original prompt message", 2)
 
